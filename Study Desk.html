@@ -10,6 +10,10 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import {
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut,
+    onAuthStateChanged, browserLocalPersistence, setPersistence
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBrdyvIaIcSyzFr3qYdmwOVPWFrgDJLDQA",
@@ -22,16 +26,49 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  const progressRef = doc(db, "progress", "book1");
+  const auth = getAuth(app);
+
+  // Progress now lives at progress/<uid>, scoped to the signed-in Google
+  // account by the security rules — not a single shared public document.
+  let currentUser = null;
+  let resolveAuthReady;
+  const authReady = new Promise(res => { resolveAuthReady = res; });
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    resolveAuthReady?.(user);
+    resolveAuthReady = null;
+    window.dispatchEvent(new CustomEvent('progress-auth-changed', { detail: { user } }));
+  });
+
+  function progressDocRef(){
+    return currentUser ? doc(db, "progress", currentUser.uid) : null;
+  }
+
+  window.progressAuth = {
+    get user(){ return currentUser; },
+    ready(){ return authReady; },
+    async signIn(){
+      await setPersistence(auth, browserLocalPersistence);
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    },
+    async signOut(){ await signOut(auth); },
+  };
 
   window.progressStore = {
     async save(data){
-      try { await setDoc(progressRef, { ...data, updatedAt: Date.now() }); }
+      await authReady;
+      const ref = progressDocRef();
+      if(!ref) return; // not signed in — nothing to sync to
+      try { await setDoc(ref, { ...data, updatedAt: Date.now() }); }
       catch(e){ console.warn('Progress save failed:', e); }
     },
     async load(){
+      await authReady;
+      const ref = progressDocRef();
+      if(!ref) return null;
       try {
-        const snap = await getDoc(progressRef);
+        const snap = await getDoc(ref);
         return snap.exists() ? snap.data() : null;
       } catch(e){ console.warn('Progress load failed:', e); return null; }
     }
@@ -97,6 +134,15 @@
   }
   .file-btn:hover{ background:var(--indigo-deep); }
   .file-btn:active{ transform:scale(.97); }
+  .sync-btn{
+    display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; background:var(--white); color:var(--ink-soft);
+    font-size:12px; font-weight:600; border:1px solid var(--line);
+    transition:background .12s, color .12s, border-color .12s; white-space:nowrap;
+  }
+  .sync-btn:hover{ background:var(--indigo); color:var(--white); border-color:var(--indigo-deep); }
+  .sync-btn.signed-in{ background:#eef6ee; color:#2f7d32; border-color:#bfe3c0; }
+  .sync-btn.signed-in:hover{ background:#e2f1e2; }
   .file-name{ font-size:11px; color:var(--ink-soft); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
   .tm-btn{
     display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:999px;
@@ -330,6 +376,7 @@
     <button class="tm-btn hidden" id="tmBtn" title="Open teacher's manual for this section">📋 Teacher's Manual</button>
     <button class="wp-btn hidden" id="wpBtn" title="Open writing practice for this lesson">✏️ Writing Practice</button>
     <div class="topbar-right">
+      <button class="sync-btn" id="syncBtn" title="Sign in with Google to sync your progress across devices">🔄 Sign in to sync</button>
       <label class="file-btn" id="loadFolderBtn">📂 Load folder
         <input type="file" id="pdfInput" webkitdirectory hidden>
       </label>
@@ -1123,6 +1170,37 @@ fsBtn.addEventListener('click', ()=>{
 
 document.addEventListener('fullscreenchange',       updateFsIcon);
 document.addEventListener('webkitfullscreenchange', updateFsIcon);
+
+// =================================================================
+// CROSS-DEVICE SYNC (sign-in)
+// =================================================================
+const syncBtn = document.getElementById('syncBtn');
+
+function renderSyncBtn(user){
+  if(user){
+    syncBtn.textContent = `✓ Syncing as ${user.displayName ? user.displayName.split(' ')[0] : (user.email || 'you')}`;
+    syncBtn.title = `Signed in as ${user.email || user.displayName || ''} — click to sign out`;
+    syncBtn.classList.add('signed-in');
+  } else {
+    syncBtn.textContent = '🔄 Sign in to sync';
+    syncBtn.title = 'Sign in with Google to sync your progress across devices';
+    syncBtn.classList.remove('signed-in');
+  }
+}
+
+syncBtn.addEventListener('click', async ()=>{
+  try {
+    if(window.progressAuth?.user){
+      await window.progressAuth.signOut();
+    } else {
+      await window.progressAuth?.signIn();
+    }
+  } catch(e){ console.warn('Sign-in failed:', e); }
+});
+
+window.addEventListener('progress-auth-changed', (e)=> renderSyncBtn(e.detail.user));
+window.addEventListener('progress-store-ready', ()=> renderSyncBtn(window.progressAuth?.user || null));
+if(window.progressAuth) renderSyncBtn(window.progressAuth.user);
 
 // =================================================================
 // DRAGGABLE DIVIDER
