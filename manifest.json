@@ -1,0 +1,459 @@
+{
+  "book": "Lets Learn Mandarin Book 1",
+  "lessons": {
+    "01-front-matter": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/01-front-matter/01-front-matter.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/01-front-matter/02-workbook-front-matter.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/01-front-matter/teachers-manual-front-matter.pdf",
+      "writingPracticePdf": null,
+      "audio": [
+        "Lets Learn Mandarin Book 1/01-front-matter/B1-L00.mp3"
+      ]
+    },
+    "02-lesson-01": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/02-lesson-01/03-lesson-01-hello-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/02-lesson-01/04-lesson-01-hello-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/02-lesson-01/lesson-01-hello-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/02-lesson-01/B1-1第一課-您好.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/02-lesson-01/B1-L01-6-Recognizing the character.mp3"
+      ]
+    },
+    "03-lesson-02": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/03-lesson-02/05-lesson-02-i-have-two-younger-brothers-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/03-lesson-02/06-lesson-02-i-have-two-younger-brothers-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/03-lesson-02/lesson-02-i-have-two-younger-brothers-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/03-lesson-02/B1-2第二課-我有兩個弟弟.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/03-lesson-02/B1-L02-6-Recognizing the character.mp3"
+      ]
+    },
+    "04-lesson-03": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/04-lesson-03/07-lesson-03-she-is-not-a-student-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/04-lesson-03/08-lesson-03-she-is-not-a-student-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/04-lesson-03/lesson-03-she-is-not-a-student-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/04-lesson-03/B1-3第三課-她不是學生.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/04-lesson-03/B1-L03-6-Recognizing the character.mp3"
+      ]
+    },
+    "05-culture-notes-01": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/05-culture-notes-01/09-culture-notes-01-kinship-titles.pdf"
+      ],
+      "workbookPdfs": [],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/05-culture-notes-01/culture-notes-01-kinship-titles-teachers-manual.pdf",
+      "writingPracticePdf": null,
+      "audio": []
+    },
+    "06-lesson-04": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/06-lesson-04/10-lesson-04-my-father-works-at-a-computer-company-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/06-lesson-04/11-lesson-04-my-father-works-at-a-computer-company-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/06-lesson-04/lesson-04-my-father-works-at-a-computer-company-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/06-lesson-04/B1-4第四課-我爸爸在電腦公司工作.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/06-lesson-04/B1-L04-6-Recognizing the character.mp3"
+      ]
+    },
+    "07-lesson-05": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/07-lesson-05/12-lesson-05-welcome-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/07-lesson-05/13-lesson-05-welcome-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/07-lesson-05/lesson-05-welcome-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/07-lesson-05/B1-5第五課-歡迎你來.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/07-lesson-05/B1-L05-6-Recognizing the character.mp3"
+      ]
+    },
+    "08-lesson-06": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/08-lesson-06/14-lesson-06-what-do-you-usually-like-to-do-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/08-lesson-06/15-lesson-06-what-do-you-usually-like-to-do-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/08-lesson-06/lesson-06-what-do-you-usually-like-to-do-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/08-lesson-06/B1-6第六課-你平常喜歡做什麼？.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/08-lesson-06/B1-L06-6-Recognizing the character.mp3"
+      ]
+    },
+    "09-culture-notes-02": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/09-culture-notes-02/16-culture-notes-02-greetings-in-taiwan.pdf"
+      ],
+      "workbookPdfs": [],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/09-culture-notes-02/culture-notes-02-greetings-teachers-manual.pdf",
+      "writingPracticePdf": null,
+      "audio": []
+    },
+    "10-lesson-07": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/10-lesson-07/17-lesson-07-may-i-ask-who-this-is-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/10-lesson-07/18-lesson-07-may-i-ask-who-this-is-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/10-lesson-07/lesson-07-may-i-ask-who-this-is-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/10-lesson-07/B1-7第七課-請問您是哪位？.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/10-lesson-07/B1-L07-6-Recognizing the character.mp3"
+      ]
+    },
+    "11-lesson-08": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/11-lesson-08/19-lesson-08-happy-birthday-to-you-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/11-lesson-08/20-lesson-08-happy-birthday-to-you-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/11-lesson-08/lesson-08-happy-birthday-to-you-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/11-lesson-08/B1-8第八課-祝你生日快樂.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/11-lesson-08/B1-L08-6-Recognizing the character.mp3"
+      ]
+    },
+    "12-lesson-09": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/12-lesson-09/21-lesson-09-are-you-free-on-friday-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/12-lesson-09/22-lesson-09-are-you-free-on-friday-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/12-lesson-09/lesson-09-are-you-free-on-friday-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/12-lesson-09/B1-9第九課-妳星期五有時間馬？.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/12-lesson-09/B1-L09-6-Recognizing the character.mp3"
+      ]
+    },
+    "13-lesson-10": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/13-lesson-10/23-lesson-10-is-it-hard-to-learn-mandarin-textbook.pdf"
+      ],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/13-lesson-10/24-lesson-10-is-it-hard-to-learn-mandarin-workbook.pdf"
+      ],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/13-lesson-10/lesson-10-is-it-hard-to-learn-mandarin-teachers-manual.pdf",
+      "writingPracticePdf": "Lets Learn Mandarin Book 1/13-lesson-10/B1-10第十課-學華語難不難？.pdf",
+      "audio": [
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-1-Text.mp3",
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-2-Vocabulary.mp3",
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-3-Grammar.mp3",
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-4-Pinyin.mp3",
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-5-Tone Differentiation.mp3",
+        "Lets Learn Mandarin Book 1/13-lesson-10/B1-L10-6-Recognizing the character.mp3"
+      ]
+    },
+    "14-culture-notes-03": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/14-culture-notes-03/25-culture-notes-03-six-etymological-principles.pdf"
+      ],
+      "workbookPdfs": [],
+      "teachersManualPdf": "Lets Learn Mandarin Book 1/14-culture-notes-03/culture-notes-03-six-etymological-principles-teachers-manual.pdf",
+      "writingPracticePdf": null,
+      "audio": []
+    },
+    "15-appendix": {
+      "textbookPdfs": [
+        "Lets Learn Mandarin Book 1/15-appendix/26-appendix-01-text-in-english.pdf",
+        "Lets Learn Mandarin Book 1/15-appendix/27-appendix-02-text-in-simplified-characters.pdf",
+        "Lets Learn Mandarin Book 1/15-appendix/28-appendix-03-vocabulary-index.pdf",
+        "Lets Learn Mandarin Book 1/15-appendix/29-appendix-04-phonetic-system.pdf"
+      ],
+      "workbookPdfs": [],
+      "teachersManualPdf": null,
+      "writingPracticePdf": null,
+      "audio": []
+    },
+    "16-workbook-back-matter": {
+      "textbookPdfs": [],
+      "workbookPdfs": [
+        "Lets Learn Mandarin Book 1/16-workbook-back-matter/30-workbook-back-matter.pdf"
+      ],
+      "teachersManualPdf": null,
+      "writingPracticePdf": null,
+      "audio": []
+    }
+  },
+  "writingData": {
+    "1": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/Lesson 01 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/16.mp3",
+        "17": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 01/17.mp3"
+      }
+    },
+    "2": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/Lesson 02 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 02/15.mp3"
+      }
+    },
+    "3": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/Lesson 03 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 03/15.mp3"
+      }
+    },
+    "4": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/Lesson 04 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 04/15.mp3"
+      }
+    },
+    "5": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/Lesson 05 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 05/16.mp3"
+      }
+    },
+    "6": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/Lesson 06 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 06/16.mp3"
+      }
+    },
+    "7": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/Lesson 07 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/16.mp3",
+        "17": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 07/17.mp3"
+      }
+    },
+    "8": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/Lesson 08 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 08/16.mp3"
+      }
+    },
+    "9": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/Lesson 09 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/16.mp3",
+        "17": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 09/17.mp3"
+      }
+    },
+    "10": {
+      "charsFile": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/Lesson 10 Chars.txt",
+      "mp3s": {
+        "1": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/01.mp3",
+        "2": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/02.mp3",
+        "3": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/03.mp3",
+        "4": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/04.mp3",
+        "5": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/05.mp3",
+        "6": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/06.mp3",
+        "7": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/07.mp3",
+        "8": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/08.mp3",
+        "9": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/09.mp3",
+        "10": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/10.mp3",
+        "11": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/11.mp3",
+        "12": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/12.mp3",
+        "13": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/13.mp3",
+        "14": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/14.mp3",
+        "15": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/15.mp3",
+        "16": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/16.mp3",
+        "17": "Lets Learn Mandarin Book 1/Writing Practice/Writing Practice/Writing MP3s/Lesson 10/17.mp3"
+      }
+    }
+  }
+}

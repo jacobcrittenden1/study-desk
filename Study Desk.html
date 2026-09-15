@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>讀寫 · Study Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+  :root{
+    --paper:#efe9dc; --paper-deep:#e6dfcd;
+    --ink:#21201c; --ink-soft:#55534a;
+    --indigo:#2b4c5c; --indigo-deep:#1c3540;
+    --seal:#a8342a; --seal-deep:#832620;
+    --gold:#b08d4f; --line:#c9c2b0; --white:#fbf9f3;
+    --jade:#3d7a5f; --jade-deep:#2d5c47;
+    --shadow:0 2px 10px rgba(33,32,28,.08),0 1px 2px rgba(33,32,28,.06);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0; background:var(--paper);
+    background-image:radial-gradient(circle at 1px 1px,rgba(33,32,28,.035) 1px,transparent 0);
+    background-size:18px 18px;
+    color:var(--ink); font-family:'Inter','Noto Sans TC',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{ height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+
+  /* ---- Topbar ---- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:7px 16px; background:var(--white); border-bottom:1px solid var(--line);
+    flex-wrap:wrap; flex-shrink:0;
+  }
+  .brand{ display:flex; align-items:center; gap:9px; }
+  .brand-mark{
+    font-family:'Noto Serif TC',serif; font-weight:700; font-size:12px;
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--seal); color:var(--white); box-shadow:var(--shadow); flex-shrink:0;
+  }
+  .brand h1{ font-family:'Noto Serif TC',serif; font-size:15px; margin:0; font-weight:700; }
+  .book-name{
+    font-family:'Noto Serif TC',serif; font-size:14px; font-weight:600;
+    color:var(--indigo); margin-left:2px; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; max-width:260px;
+  }
+  .book-name:not(:empty)::before{ content:'· '; color:var(--line); }
+  .brand .tagline{ display:none; }
+  .topbar-right{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .fs-btn{
+    width:28px; height:28px; border-radius:7px; border:1px solid var(--line);
+    background:var(--white); color:var(--ink-soft); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition:background .12s, color .12s, border-color .12s;
+  }
+  .fs-btn:hover{ background:var(--indigo); color:var(--white); border-color:var(--indigo-deep); }
+  :fullscreen .fs-btn, :-webkit-full-screen .fs-btn{ background:var(--indigo); color:var(--white); border-color:var(--indigo-deep); }
+  .file-btn{
+    display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; background:var(--indigo); color:var(--white);
+    font-size:12px; font-weight:600; border:1px solid var(--indigo-deep);
+    transition:transform .12s,background .12s; white-space:nowrap;
+  }
+  .file-btn:hover{ background:var(--indigo-deep); }
+  .file-btn:active{ transform:scale(.97); }
+  .file-name{ font-size:11px; color:var(--ink-soft); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px; }
+  .tm-btn{
+    display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; background:var(--gold); color:var(--white);
+    font-size:12px; font-weight:600; border:1px solid #8f7038;
+    transition:transform .12s,background .12s,opacity .15s; white-space:nowrap;
+  }
+  .tm-btn:hover{ background:#8f7038; }
+  .tm-btn:active{ transform:scale(.97); }
+  .tm-btn.hidden{ opacity:0; pointer-events:none; }
+  .wp-btn{
+    display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:999px;
+    cursor:pointer; background:var(--jade); color:var(--white);
+    font-size:12px; font-weight:600; border:1px solid var(--jade-deep);
+    transition:transform .12s,background .12s,opacity .15s; white-space:nowrap;
+  }
+  .wp-btn:hover{ background:var(--jade-deep); }
+  .wp-btn:active{ transform:scale(.97); }
+  .wp-btn.hidden{ opacity:0; pointer-events:none; }
+
+  /* ---- Writing Practice Modal ---- */
+  .wp-modal{
+    position:fixed; inset:0; z-index:500;
+    background:var(--paper);
+    background-image:radial-gradient(circle at 1px 1px,rgba(33,32,28,.035) 1px,transparent 0);
+    background-size:18px 18px;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  .wp-modal.hidden{ display:none; }
+  .wp-modal-header{
+    display:flex; align-items:center; gap:6px; padding:7px 16px;
+    background:var(--white); border-bottom:1px solid var(--line);
+    flex-wrap:wrap; flex-shrink:0;
+  }
+  .wp-modal-title{
+    font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700;
+    color:var(--jade); white-space:nowrap; margin-right:4px; flex-shrink:0;
+  }
+  .wp-close-btn{
+    width:28px; height:28px; border-radius:7px; border:1px solid var(--seal-deep);
+    background:var(--seal); color:var(--white); cursor:pointer; font-size:14px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; transition:background .12s;
+    flex-shrink:0;
+  }
+  .wp-close-btn:hover{ background:var(--seal-deep); }
+
+  /* ---- Character Panel ---- */
+  .wp-chars-panel{
+    display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+    padding:10px 16px; background:var(--white);
+    border-bottom:1px solid var(--line); overflow-x:auto; flex-shrink:0;
+  }
+  .wp-chars-panel.hidden{ display:none; }
+  .wp-chars-panel::-webkit-scrollbar{ height:0; }
+  .char-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:58px; height:58px; border-radius:10px;
+    border:1.5px solid var(--line); background:var(--paper);
+    font-family:'Noto Serif TC',serif; font-size:30px; color:var(--ink);
+    cursor:pointer; flex-shrink:0; user-select:none;
+    transition:background .1s, border-color .1s, transform .08s, color .1s;
+  }
+  .char-btn:hover{ background:var(--paper-deep); border-color:var(--indigo); }
+  .char-btn:active{ transform:scale(.9); }
+  .char-btn.playing{ background:var(--jade); color:var(--white); border-color:var(--jade-deep); }
+  .char-btn.no-audio{ opacity:.45; cursor:default; }
+  .char-page-sep{ width:1px; height:42px; background:var(--line); flex-shrink:0; align-self:center; margin:0 4px; }
+  /* ---- Audio bar — single row ---- */
+  .audio-bar{
+    background:var(--white); border-bottom:1px solid var(--line);
+    padding:5px 16px; display:flex; flex-direction:row; align-items:center; gap:8px; flex-shrink:0;
+    overflow:hidden; min-height:0;
+  }
+  .tabs{ display:flex; gap:4px; overflow-x:auto; flex-shrink:1; min-width:0; align-items:center; }
+  .tabs::-webkit-scrollbar{ height:0; }
+  .tab-btn{
+    flex-shrink:0; padding:3px 9px; border-radius:999px; border:1px solid var(--line);
+    background:var(--paper); color:var(--ink-soft); font-size:11px; font-weight:600; cursor:pointer;
+  }
+  .tab-btn.active{ background:var(--seal); color:var(--white); border-color:var(--seal-deep); }
+  .player{ display:flex; align-items:center; gap:8px; flex-shrink:0; margin-left:auto; }
+  .scrubber{ display:flex; align-items:center; gap:6px; width:200px; }
+  .scrubber span{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); width:34px; text-align:center; }
+  input[type=range]{ flex:1; height:3px; border-radius:2px; -webkit-appearance:none; background:var(--line); outline:none; }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:13px; height:13px; border-radius:50%;
+    background:var(--seal); border:2px solid var(--white); box-shadow:0 0 0 1px var(--seal); cursor:pointer;
+  }
+  .transport{ display:flex; align-items:center; gap:5px; flex-wrap:nowrap; }
+  .transport button{ border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:7px; padding:4px 8px; font-size:11px; font-weight:600; cursor:pointer; }
+  .play-btn{
+    background:var(--indigo)!important; color:var(--white)!important; border-color:var(--indigo-deep)!important;
+    width:32px; height:30px; font-size:13px; padding:0!important; display:flex; align-items:center; justify-content:center;
+  }
+  .speed-group{ display:flex; gap:3px; margin-left:4px; }
+  .speed-group button{ padding:4px 7px; font-family:'JetBrains Mono',monospace; font-size:11px; }
+  .speed-group button.active{ background:var(--gold); color:var(--white); border-color:#8f7038; }
+  .empty-state{ color:var(--ink-soft); font-size:12px; white-space:nowrap; }
+
+  /* ---- Lesson selector (lives inside topbar) ---- */
+  .lesson-bar{ display:flex; align-items:center; gap:5px; padding:0 6px; }
+  .lesson-bar.hidden{ display:none; }
+  .lesson-bar label{ font-size:11px; font-weight:600; color:var(--ink-soft); white-space:nowrap; }
+  .lesson-select{
+    border:1px solid var(--line); border-radius:7px; padding:4px 8px;
+    font-size:12px; font-weight:600; font-family:'Inter','Noto Sans TC',sans-serif;
+    background:var(--white); color:var(--ink); cursor:pointer;
+    max-width:220px; outline:none;
+    transition:border-color .12s;
+  }
+  .lesson-select:focus{ border-color:var(--indigo); }
+
+  /* ---- Workspace ---- */
+  .workspace{
+    flex:1; display:grid; grid-template-columns:1fr 0px 0px;
+    min-height:0; overflow:hidden; transition:grid-template-columns .25s ease;
+  }
+  .pane{ display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+  .pane-left{ background:var(--paper-deep); transition:opacity .2s; }
+  .pane-right{ background:var(--paper);      transition:opacity .2s; }
+  .workspace.wb-hidden .pane-right{ opacity:0; pointer-events:none; }
+  .workspace.tb-hidden .pane-left { opacity:0; pointer-events:none; }
+
+  /* divider */
+  .pane-divider{
+    width:8px; background:var(--paper-deep);
+    border-left:1px solid var(--line); border-right:1px solid var(--line);
+    cursor:col-resize; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; user-select:none; touch-action:none; z-index:10; transition:background .15s;
+  }
+  .pane-divider::after{
+    content:''; display:block; width:2px; height:32px; border-radius:2px; background:var(--line); transition:background .15s,height .15s;
+  }
+  .pane-divider:hover,.pane-divider.dragging{ background:var(--indigo); }
+  .pane-divider:hover::after,.pane-divider.dragging::after{ background:var(--white); height:48px; }
+
+  /* ---- Pane headers ---- */
+  .pane-header{
+    display:flex; align-items:center; gap:6px; padding:5px 10px;
+    border-bottom:1px solid var(--line); background:var(--white); flex-wrap:wrap; flex-shrink:0;
+  }
+  .pane-label{ font-size:10.5px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); flex-shrink:0; }
+  .pane-label.wb{ color:var(--seal); }
+
+  .page-nav{ display:flex; align-items:center; gap:5px; }
+  .page-nav button{ width:27px; height:27px; border-radius:7px; border:1px solid var(--line); background:var(--white); cursor:pointer; font-size:14px; color:var(--indigo); font-weight:700; }
+  .page-nav button:disabled{ opacity:.35; cursor:default; }
+  .page-nav span{ font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--ink-soft); min-width:50px; text-align:center; }
+
+  .pane-playlist{ display:flex; align-items:center; gap:4px; }
+  .pane-playlist button{ width:24px; height:24px; border-radius:6px; border:1px solid var(--line); background:var(--white); color:var(--indigo); font-size:13px; font-weight:700; cursor:pointer; }
+  .pane-playlist button:disabled{ opacity:.35; cursor:default; }
+  .pane-playlist select{ border:1px solid var(--line); border-radius:7px; padding:3px 6px; font-size:11.5px; background:var(--white); color:var(--ink); font-family:'Inter','Noto Sans TC',sans-serif; cursor:pointer; max-width:150px; }
+  .pane-playlist.hidden{ display:none; }
+
+  .pane-actions{ display:flex; align-items:center; gap:5px; margin-left:auto; flex-shrink:0; }
+  .icon-btn{
+    width:28px; height:28px; border-radius:7px; border:1px solid var(--line);
+    background:var(--white); cursor:pointer; font-size:14px; color:var(--indigo); font-weight:700;
+    display:flex; align-items:center; justify-content:center; transition:background .12s,color .12s;
+  }
+  .icon-btn:hover{ background:var(--indigo); color:var(--white); border-color:var(--indigo-deep); }
+
+  .pane-toggle-btn{
+    width:28px; height:28px; border-radius:7px; border:1px solid var(--line);
+    background:var(--white); cursor:pointer; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; transition:background .12s,color .12s,border-color .12s;
+  }
+  .pane-toggle-btn:hover{ background:var(--seal); color:var(--white); border-color:var(--seal-deep); }
+  .pane-toggle-btn.active{ background:var(--seal); color:var(--white); border-color:var(--seal-deep); }
+
+  /* ---- Ink toolbar ---- */
+  .ink-tools{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .annotate-btn{ border:1px solid var(--line); background:var(--white); color:var(--ink); border-radius:7px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer; flex-shrink:0; }
+  .annotate-btn.active{ background:var(--seal); color:var(--white); border-color:var(--seal-deep); }
+  .eraser-btn.active{ background:var(--gold)!important; color:var(--white)!important; border-color:#8f7038!important; }
+  canvas.ink-canvas.erase-on{ cursor: cell; }
+  .ink-tools .ink-extra{ display:none; align-items:center; gap:6px; }
+  .ink-tools.active .ink-extra{ display:inline-flex; }
+  .ink-tools .ink-extra button:not(.swatch){ border:1px solid var(--line); background:var(--white); border-radius:7px; padding:4px 8px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--ink); }
+  .ink-save{ background:var(--indigo)!important; color:var(--white)!important; border-color:var(--indigo-deep)!important; }
+  .ink-tools select{ border:1px solid var(--line); border-radius:7px; padding:3px 5px; font-size:11.5px; background:var(--white); color:var(--ink); }
+  .swatch{ width:19px; height:19px; border-radius:50%; border:2px solid var(--white); box-shadow:0 0 0 1px var(--line); cursor:pointer; padding:0; flex-shrink:0; }
+  .swatch.ink{ background:#21201c; }
+  .swatch.seal{ background:#a8342a; }
+  .swatch.indigo{ background:#2b4c5c; }
+  .swatch.active{ box-shadow:0 0 0 2.5px var(--gold); }
+
+  /* ---- PDF viewport — continuous scroll ---- */
+  .pdf-viewport{ flex:1; overflow-y:auto; overflow-x:auto; padding:20px; }
+  .pdf-viewport::-webkit-scrollbar{ width:6px; }
+  .pdf-viewport::-webkit-scrollbar-thumb{ background:var(--line); border-radius:3px; }
+  .pages-container{ display:flex; flex-direction:column; align-items:center; gap:16px; min-width:fit-content; }
+  .page-item{ position:relative; flex-shrink:0; }
+  canvas.pdf-canvas{ display:block; box-shadow:var(--shadow); background:var(--white); border-radius:2px; }
+  canvas.ink-canvas{ position:absolute; left:0; top:0; border-radius:2px; }
+  canvas.ink-canvas.write-off{ pointer-events:none; }
+  canvas.ink-canvas.write-on{ pointer-events:auto; cursor:crosshair; touch-action:none; }
+
+  .pdf-loading{
+    display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 20px;
+    color:var(--ink-soft); font-size:13px;
+  }
+  .spinner{
+    width:28px; height:28px; border:3px solid var(--line); border-top-color:var(--indigo);
+    border-radius:50%; animation:spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .pdf-empty{ text-align:center; color:var(--ink-soft); font-size:13px; padding:40px 20px; line-height:1.6; }
+
+  footer.tip{ text-align:center; font-size:11.5px; color:var(--ink-soft); padding:6px; background:var(--white); border-top:1px solid var(--line); flex-shrink:0; }
+
+  @media(max-width:760px){
+    .workspace{ grid-template-columns:1fr!important; }
+    .pane-right{ border-top:2px solid var(--line); }
+    .pane-divider{ display:none!important; }
+    .brand .tagline{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">中文</div>
+      <h1>讀寫 Study Desk</h1>
+      <div class="book-name" id="pdfFileName"></div>
+    </div>
+    <nav class="lesson-bar hidden" id="lessonBar"></nav>
+    <button class="tm-btn hidden" id="tmBtn" title="Open teacher's manual for this section">📋 Teacher's Manual</button>
+    <button class="wp-btn hidden" id="wpBtn" title="Open writing practice for this lesson">✏️ Writing Practice</button>
+    <div class="topbar-right">
+      <label class="file-btn" id="loadFolderBtn">📂 Load folder
+        <input type="file" id="pdfInput" webkitdirectory hidden>
+      </label>
+      <button class="fs-btn" id="fsBtn" title="Enter fullscreen">
+        <svg id="fsIcon" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1h4M1 1v4M14 1h-4M14 1v4M1 14h4M1 14v-4M14 14h-4M14 14v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="audio-bar">
+    <div class="tabs" id="trackTabs"></div>
+    <div class="empty-state" id="audioEmpty">Load your course folder above to begin.</div>
+    <div class="player" id="player" hidden>
+      <button class="play-btn" id="playPause">▶</button>
+      <div class="scrubber">
+        <span id="curTime">0:00</span>
+        <input type="range" id="seek" min="0" max="100" value="0">
+        <span id="durTime">0:00</span>
+      </div>
+      <div class="transport">
+        <button id="back5">−5s</button>
+        <button id="fwd5">+5s</button>
+        <div class="speed-group" id="speedGroup"></div>
+      </div>
+    </div>
+    <audio id="audioEl"></audio>
+  </div>
+
+  <main class="workspace wb-hidden" id="workspace">
+
+    <!-- LEFT: Textbook -->
+    <section class="pane pane-left">
+      <div class="pane-header">
+        <span class="pane-label">Textbook</span>
+        <div class="page-nav">
+          <button id="prevPageL" disabled>‹</button>
+          <span id="pageIndL">– / –</span>
+          <button id="nextPageL" disabled>›</button>
+        </div>
+        <div class="pane-playlist hidden" id="playlistL">
+          <button id="prevPdfL" disabled>‹</button>
+          <select id="selectPdfL"></select>
+          <button id="nextPdfL" disabled>›</button>
+        </div>
+        <div class="ink-tools" id="inkToolsL">
+          <button class="annotate-btn" id="annotateL">✎ Annotate</button>
+          <span class="ink-extra">
+            <button class="swatch ink active" data-color="#21201c" title="Ink"></button>
+            <button class="swatch seal" data-color="#a8342a" title="Red"></button>
+            <button class="swatch indigo" data-color="#2b4c5c" title="Indigo"></button>
+            <select id="inkWidthL">
+              <option value="1" selected>Very Fine</option>
+              <option value="2">Fine</option>
+              <option value="4">Medium</option>
+              <option value="7">Bold</option>
+            </select>
+            <button class="eraser-btn" id="inkEraseL" title="Erase"><svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12L6.5 2H13.5L9 12H2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.12"/><line x1="6.5" y1="2" x2="2" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="0.75" y1="13.25" x2="15.25" y2="13.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Erase</button>
+            <button id="inkUndoL">Undo</button>
+            <button id="inkClearL">Clear</button>
+            <button id="inkSaveL" class="ink-save">Save</button>
+          </span>
+        </div>
+        <div class="pane-actions">
+          <button class="icon-btn" id="zoomOutL" title="Zoom out">−</button>
+          <button class="icon-btn" id="zoomInL"  title="Zoom in">+</button>
+          <button class="pane-toggle-btn" id="wbToggle" title="Show workbook">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2.5" width="5.5" height="11" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/><rect x="9" y="2.5" width="5.5" height="11" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/><line x1="3" y1="5.5" x2="5.5" y2="5.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="3" y1="7.5" x2="5.5" y2="7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="10.5" y1="5.5" x2="13" y2="5.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="10.5" y1="7.5" x2="13" y2="7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="pdf-viewport" id="viewportL">
+        <div class="pdf-empty" id="emptyL">Textbook PDF will appear here.</div>
+        <div class="pages-container" id="pagesL"></div>
+      </div>
+    </section>
+
+    <div class="pane-divider" id="paneDivider"></div>
+
+    <!-- RIGHT: Workbook -->
+    <section class="pane pane-right">
+      <div class="pane-header">
+        <span class="pane-label wb">Workbook</span>
+        <div class="page-nav">
+          <button id="prevPageR" disabled>‹</button>
+          <span id="pageIndR">– / –</span>
+          <button id="nextPageR" disabled>›</button>
+        </div>
+        <div class="pane-playlist hidden" id="playlistR">
+          <button id="prevPdfR" disabled>‹</button>
+          <select id="selectPdfR"></select>
+          <button id="nextPdfR" disabled>›</button>
+        </div>
+        <div class="ink-tools" id="inkToolsR">
+          <button class="annotate-btn" id="annotateR">✎ Annotate</button>
+          <span class="ink-extra">
+            <button class="swatch ink active" data-color="#21201c" title="Ink"></button>
+            <button class="swatch seal" data-color="#a8342a" title="Red"></button>
+            <button class="swatch indigo" data-color="#2b4c5c" title="Indigo"></button>
+            <select id="inkWidthR">
+              <option value="1" selected>Very Fine</option>
+              <option value="2">Fine</option>
+              <option value="4">Medium</option>
+              <option value="7">Bold</option>
+            </select>
+            <button class="eraser-btn" id="inkEraseR" title="Erase"><svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12L6.5 2H13.5L9 12H2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.12"/><line x1="6.5" y1="2" x2="2" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="0.75" y1="13.25" x2="15.25" y2="13.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Erase</button>
+            <button id="inkUndoR">Undo</button>
+            <button id="inkClearR">Clear</button>
+            <button id="inkSaveR" class="ink-save">Save</button>
+          </span>
+        </div>
+        <div class="pane-actions">
+          <button class="icon-btn" id="zoomOutR" title="Zoom out">−</button>
+          <button class="icon-btn" id="zoomInR"  title="Zoom in">+</button>
+          <button class="pane-toggle-btn" id="tbToggle" title="Hide textbook">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2.5" width="5.5" height="11" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/><rect x="9" y="2.5" width="5.5" height="11" rx="1" stroke="currentColor" stroke-width="1.3" fill="none"/><line x1="3" y1="5.5" x2="5.5" y2="5.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="3" y1="7.5" x2="5.5" y2="7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="10.5" y1="5.5" x2="13" y2="5.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/><line x1="10.5" y1="7.5" x2="13" y2="7.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="pdf-viewport" id="viewportR">
+        <div class="pdf-empty" id="emptyR">Workbook PDF will appear here.</div>
+        <div class="pages-container" id="pagesR"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="tip">Files stay on your device — nothing is uploaded or saved automatically.</footer>
+
+  <!-- ==================== Writing Practice Modal ==================== -->
+  <div class="wp-modal hidden" id="wpModal">
+    <div class="wp-modal-header">
+      <span class="wp-modal-title">✏️ Writing Practice</span>
+      <div class="page-nav">
+        <button id="prevPageWP" disabled>‹</button>
+        <span id="pageIndWP">– / –</span>
+        <button id="nextPageWP" disabled>›</button>
+      </div>
+      <div class="ink-tools" id="inkToolsWP">
+        <button class="annotate-btn" id="annotateWP">✎ Annotate</button>
+        <span class="ink-extra">
+          <button class="swatch ink active" data-color="#21201c" title="Ink"></button>
+          <button class="swatch seal" data-color="#a8342a" title="Red"></button>
+          <button class="swatch indigo" data-color="#2b4c5c" title="Indigo"></button>
+          <select id="inkWidthWP">
+            <option value="1" selected>Very Fine</option>
+            <option value="2">Fine</option>
+            <option value="4">Medium</option>
+            <option value="7">Bold</option>
+          </select>
+          <button class="eraser-btn" id="inkEraseWP" title="Erase"><svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12L6.5 2H13.5L9 12H2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.12"/><line x1="6.5" y1="2" x2="2" y2="12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="0.75" y1="13.25" x2="15.25" y2="13.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Erase</button>
+          <button id="inkUndoWP">Undo</button>
+          <button id="inkClearWP">Clear</button>
+          <button id="inkSaveWP" class="ink-save">Save</button>
+        </span>
+      </div>
+      <div class="pane-actions">
+        <button class="icon-btn" id="zoomOutWP" title="Zoom out">−</button>
+        <button class="icon-btn" id="zoomInWP" title="Zoom in">+</button>
+        <button class="wp-close-btn" id="closeWP" title="Close writing practice">✕</button>
+      </div>
+    </div>
+    <div class="wp-chars-panel hidden" id="wpCharsPanel"></div>
+    <div class="pdf-viewport" id="viewportWP">
+      <div class="pdf-empty" id="emptyWP">Writing Practice PDF will appear here.</div>
+      <div class="pages-container" id="pagesWP"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// =================================================================
+// PDF VIEWER FACTORY — continuous scroll
+// =================================================================
+function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
+                         prevPageBtn, nextPageBtn, pageIndEl,
+                         playlistEl, prevPdfBtn, nextPdfBtn, selectPdfEl,
+                         zoomInBtn, zoomOutBtn }) {
+
+  let pdfDoc = null, baseScale = 1, zoomFactor = 1, _committedZoom = 1;
+  let playlist = [], playlistIdx = -1;
+  let pageItems = [];          // [{wrapper, canvas, pageNum}]
+  let ioObserver = null;
+  let visiblePage = 1;
+  let _onPageReady  = null;   // fn(pageNum, canvas, wrapper)
+  let _onPageResize = null;   // fn(pageNum, canvas)
+  let _annotating   = false;  // pinch disabled while annotating
+
+  function pageScale(){ return baseScale * zoomFactor; }
+
+  async function computeBaseScale(){
+    const page = await pdfDoc.getPage(1);
+    const vp = page.getViewport({scale:1});
+    const availW = viewportEl.clientWidth - 40;
+    baseScale = Math.max(0.3, availW / vp.width);
+  }
+
+  async function renderAllPages(){
+    if(ioObserver){ ioObserver.disconnect(); ioObserver = null; }
+    pagesContainerEl.innerHTML = '';
+    pageItems = [];
+    emptyEl.style.display = 'none';
+
+    // Show loading spinner
+    const loader = document.createElement('div');
+    loader.className = 'pdf-loading';
+    loader.innerHTML = '<div class="spinner"></div><div>Loading pages…</div>';
+    pagesContainerEl.appendChild(loader);
+
+    const numPages = pdfDoc.numPages;
+    pageIndEl.textContent = `1 / ${numPages}`;
+
+    for(let i = 1; i <= numPages; i++){
+      const page = await pdfDoc.getPage(i);
+      const vp   = page.getViewport({scale: baseScale * zoomFactor});
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'page-item';
+      wrapper.dataset.page = i;
+
+      const canvas = document.createElement('canvas');
+      canvas.className = 'pdf-canvas';
+      canvas.width  = vp.width;
+      canvas.height = vp.height;
+      wrapper.appendChild(canvas);
+
+      if(i === 1) pagesContainerEl.replaceChild(wrapper, loader);
+      else        pagesContainerEl.appendChild(wrapper);
+
+      pageItems.push({wrapper, canvas, pageNum: i});
+      await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+      _onPageReady?.(i, canvas, wrapper);
+    }
+
+    setupObserver();
+    prevPageBtn.disabled = true;
+    nextPageBtn.disabled = numPages <= 1;
+  }
+
+  function setupObserver(){
+    const pageVisibility = new Map();
+    ioObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => pageVisibility.set(+e.target.dataset.page, e.intersectionRatio));
+      let best = 1, bestRatio = -1;
+      pageVisibility.forEach((ratio, pg) => { if(ratio > bestRatio){ bestRatio = ratio; best = pg; } });
+      visiblePage = best;
+      pageIndEl.textContent = `${best} / ${pdfDoc.numPages}`;
+      prevPageBtn.disabled = best <= 1;
+      nextPageBtn.disabled = best >= pdfDoc.numPages;
+    }, { root: viewportEl, threshold: [0, .25, .5, .75, 1] });
+    pageItems.forEach(({wrapper}) => ioObserver.observe(wrapper));
+  }
+
+  function scrollToPage(num){
+    const item = pageItems.find(p => p.pageNum === num);
+    if(item) item.wrapper.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  prevPageBtn.addEventListener('click', ()=>{ if(visiblePage > 1) scrollToPage(visiblePage - 1); });
+  nextPageBtn.addEventListener('click', ()=>{ if(pdfDoc && visiblePage < pdfDoc.numPages) scrollToPage(visiblePage + 1); });
+
+  async function loadFile(file){
+    const buf = await file.arrayBuffer();
+    pdfDoc = await pdfjsLib.getDocument({data: buf}).promise;
+    zoomFactor = 1;
+    viewportEl.scrollTop = 0;
+    await computeBaseScale();
+    await renderAllPages();
+  }
+
+  async function setPlaylist(files){
+    playlist = files.map(f => ({name: f.name.replace(/\.pdf$/i,''), file: f}));
+    selectPdfEl.innerHTML = '';
+    playlist.forEach((e, i) => {
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = e.name;
+      selectPdfEl.appendChild(opt);
+    });
+    if(playlist.length === 0){
+      pdfDoc = null;
+      pagesContainerEl.innerHTML = '';
+      emptyEl.style.display = '';
+      pageIndEl.textContent = '– / –';
+      prevPageBtn.disabled = true;
+      nextPageBtn.disabled = true;
+      playlistEl?.classList.add('hidden');
+      return;
+    }
+    playlistEl && (playlist.length > 1 ? playlistEl.classList.remove('hidden') : playlistEl.classList.add('hidden'));
+    await goTo(0);
+  }
+
+  async function goTo(idx){
+    playlistIdx = idx;
+    selectPdfEl.value = idx;
+    if(prevPdfBtn) prevPdfBtn.disabled = idx === 0;
+    if(nextPdfBtn) nextPdfBtn.disabled = idx === playlist.length - 1;
+    await loadFile(playlist[idx].file);
+  }
+
+  selectPdfEl?.addEventListener('change', ()=> goTo(+selectPdfEl.value));
+  prevPdfBtn?.addEventListener('click',   ()=>{ if(playlistIdx > 0) goTo(playlistIdx - 1); });
+  nextPdfBtn?.addEventListener('click',   ()=>{ if(playlistIdx < playlist.length - 1) goTo(playlistIdx + 1); });
+
+  zoomInBtn.addEventListener('click',  ()=>{ if(!pdfDoc) return; zoomFactor = Math.min(3, zoomFactor * 1.18);  doZoom(); });
+  zoomOutBtn.addEventListener('click', ()=>{ if(!pdfDoc) return; zoomFactor = Math.max(0.3, zoomFactor / 1.18); doZoom(); });
+
+  // ---- Pinch-to-zoom (disabled when annotation is active) ----
+  let _pinching = false, _pinchDist0 = 0, _pinchZoom0 = 1;
+
+  function _pinchDist(e){
+    return Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+  }
+
+  viewportEl.addEventListener('touchstart', e=>{
+    if(_annotating || e.touches.length !== 2) return;
+    e.preventDefault();
+    _pinching = true;
+    _pinchDist0 = _pinchDist(e);
+    _pinchZoom0 = zoomFactor;
+    // anchor transform origin at pinch midpoint
+    const t = e.touches;
+    const mid = { x:(t[0].clientX+t[1].clientX)/2, y:(t[0].clientY+t[1].clientY)/2 };
+    const rect = pagesContainerEl.getBoundingClientRect();
+    pagesContainerEl.style.transformOrigin = `${mid.x - rect.left}px ${mid.y - rect.top}px`;
+  }, {passive: false});
+
+  viewportEl.addEventListener('touchmove', e=>{
+    if(!_pinching || e.touches.length !== 2) return;
+    e.preventDefault();
+    const ratio = _pinchDist(e) / _pinchDist0;
+    const newZ  = Math.min(3, Math.max(0.3, _pinchZoom0 * ratio));
+    pagesContainerEl.style.transform = `scale(${newZ / zoomFactor})`;
+  }, {passive: false});
+
+  const _commitPinch = async ()=>{
+    if(!_pinching) return;
+    _pinching = false;
+    const m = pagesContainerEl.style.transform.match(/scale\(([^)]+)\)/);
+    pagesContainerEl.style.transform      = '';
+    pagesContainerEl.style.transformOrigin = '';
+    if(m && pdfDoc){
+      zoomFactor = Math.min(3, Math.max(0.3, zoomFactor * parseFloat(m[1])));
+      await doZoom();
+    }
+  };
+  viewportEl.addEventListener('touchend',    _commitPinch, {passive: true});
+  viewportEl.addEventListener('touchcancel', ()=>{
+    _pinching = false;
+    pagesContainerEl.style.transform      = '';
+    pagesContainerEl.style.transformOrigin = '';
+  }, {passive: true});
+
+  // ---- Trackpad pinch-to-zoom (ctrl + wheel) ----
+  // Strategy: accumulate a CSS-only multiplier during gesture (never touching zoomFactor),
+  // anchor transform-origin at cursor on first tick, then on settle do one re-render and
+  // correct scroll so the content under the cursor stays fixed.
+  const VP_PAD = 20; // matches .pdf-viewport { padding: 20px }
+  let _wTimer = null, _wActive = false;
+  let _wMult = 1;                           // CSS-only multiplier since gesture start
+  let _wScrollTop = 0, _wScrollLeft = 0;   // scroll at gesture start
+  let _wCx = 0, _wCy = 0;                  // cursor in viewportEl space at gesture start
+
+  viewportEl.addEventListener('wheel', e=>{
+    if(!e.ctrlKey || _annotating || !pdfDoc) return;
+    e.preventDefault();
+
+    if(!_wActive){
+      _wActive = true;
+      _wMult   = 1;
+      _wScrollTop  = viewportEl.scrollTop;
+      _wScrollLeft = viewportEl.scrollLeft;
+      const vpRect = viewportEl.getBoundingClientRect();
+      _wCx = e.clientX - vpRect.left;
+      _wCy = e.clientY - vpRect.top;
+      // Anchor in pagesContainer coordinate space
+      const ox = _wCx - VP_PAD + _wScrollLeft;
+      const oy = _wCy - VP_PAD + _wScrollTop;
+      pagesContainerEl.style.transformOrigin = `${ox}px ${oy}px`;
+    }
+
+    // Accumulate multiplier; clamp so final zoomFactor stays in [0.3, 3]
+    const step = Math.exp(-e.deltaY / 150);
+    _wMult = Math.min(3 / zoomFactor, Math.max(0.3 / zoomFactor, _wMult * step));
+    pagesContainerEl.style.transform = `scale(${_wMult})`;
+
+    clearTimeout(_wTimer);
+    _wTimer = setTimeout(async ()=>{
+      _wActive = false;
+      const mult = _wMult;
+      _wMult = 1;
+      pagesContainerEl.style.transform      = '';
+      pagesContainerEl.style.transformOrigin = '';
+
+      // Commit zoom and re-render at true resolution
+      zoomFactor = Math.min(3, Math.max(0.3, zoomFactor * mult));
+      await doZoom();
+
+      // Adjust scroll so the content point under the cursor stays at the cursor.
+      // Derivation: contentY = _wCy - VP_PAD + _wScrollTop
+      //   after scale: contentY*mult should be at _wCy - VP_PAD from viewport top
+      //   → newScrollTop = (mult-1)*(_wCy - VP_PAD) + _wScrollTop * mult
+      viewportEl.scrollLeft = Math.max(0, (mult - 1) * (_wCx - VP_PAD) + _wScrollLeft * mult);
+      viewportEl.scrollTop  = Math.max(0, (mult - 1) * (_wCy - VP_PAD) + _wScrollTop  * mult);
+    }, 150);
+  }, {passive: false});
+
+  async function doZoom(){
+    for(const item of pageItems){
+      const page = await pdfDoc.getPage(item.pageNum);
+      const vp   = page.getViewport({scale: baseScale * zoomFactor});
+      item.canvas.width  = vp.width;
+      item.canvas.height = vp.height;
+      await page.render({canvasContext: item.canvas.getContext('2d'), viewport: vp}).promise;
+      _onPageResize?.(item.pageNum, item.canvas);
+    }
+    _committedZoom = zoomFactor;
+  }
+
+  async function refit(){
+    if(!pdfDoc || !pageItems.length) return;
+    await computeBaseScale();
+    await doZoom();
+  }
+
+  return {
+    get pdfDoc(){ return pdfDoc; },
+    get visiblePage(){ return visiblePage; },
+    get pageItems(){ return pageItems; },
+    pageScale,
+    setPlaylist,
+    refit,
+    set onPageReady(fn){ _onPageReady  = fn; },
+    set onPageResize(fn){ _onPageResize = fn; },
+    set annotating(v){ _annotating = !!v; },
+  };
+}
+
+// =================================================================
+// INK OVERLAY FACTORY — one ink canvas per page
+// =================================================================
+function makeInkOverlay({ getViewer, inkToolsEl, annotateBtn,
+                          widthSelect, undoBtn, clearBtn, saveBtn, swatches, eraserBtn }){
+  let inkData   = {};           // { pageNum: { strokes:[] } }
+  let writeMode = false;
+  let eraseMode = false;
+  let inkColor  = '#21201c';
+  let inkWidth  = 1;
+
+  // Map of pageNum → {inkCanvas, pdfCanvas}
+  const pages = new Map();
+
+  function ensureInk(num){
+    if(!inkData[num]) inkData[num] = {strokes:[]};
+    return inkData[num];
+  }
+
+  function redrawPage(num){
+    const p = pages.get(num);
+    if(!p) return;
+    const ictx  = p.inkCanvas.getContext('2d');
+    const scale = getViewer().pageScale();
+    ictx.clearRect(0, 0, p.inkCanvas.width, p.inkCanvas.height);
+    for(const s of ensureInk(num).strokes) drawStroke(ictx, s, scale);
+  }
+
+  function drawStroke(ictx, s, scale){
+    const pts = s.points;
+    if(!pts.length) return;
+    const isErase = !!s.erase;
+    if(isErase){ ictx.save(); ictx.globalCompositeOperation = 'destination-out'; }
+    if(pts.length === 1){
+      ictx.beginPath();
+      ictx.arc(pts[0].x*scale, pts[0].y*scale, (s.width*scale)/2, 0, Math.PI*2);
+      ictx.fillStyle = isErase ? 'rgba(0,0,0,1)' : s.color;
+      ictx.fill();
+      if(isErase) ictx.restore();
+      return;
+    }
+    ictx.beginPath();
+    ictx.moveTo(pts[0].x*scale, pts[0].y*scale);
+    for(let i=1;i<pts.length;i++) ictx.lineTo(pts[i].x*scale, pts[i].y*scale);
+    ictx.strokeStyle = isErase ? 'rgba(0,0,0,1)' : s.color;
+    ictx.lineWidth   = s.width * scale;
+    ictx.lineCap = 'round'; ictx.lineJoin = 'round';
+    ictx.stroke();
+    if(isErase) ictx.restore();
+  }
+
+  function syncSize(inkCanvas, pdfCanvas){
+    inkCanvas.width  = pdfCanvas.width;
+    inkCanvas.height = pdfCanvas.height;
+    inkCanvas.style.width  = pdfCanvas.width  + 'px';
+    inkCanvas.style.height = pdfCanvas.height + 'px';
+  }
+
+  function attachInkCanvas(pageNum, pdfCanvas, wrapper){
+    const inkCanvas = document.createElement('canvas');
+    inkCanvas.className = 'ink-canvas ' + (writeMode ? 'write-on' : 'write-off');
+    syncSize(inkCanvas, pdfCanvas);
+    wrapper.appendChild(inkCanvas);
+    pages.set(pageNum, {inkCanvas, pdfCanvas});
+    setupEvents(inkCanvas, pageNum);
+    applyCanvasCursor(inkCanvas);
+    redrawPage(pageNum);
+  }
+
+  function resizePage(pageNum, pdfCanvas){
+    const p = pages.get(pageNum);
+    if(!p) return;
+    p.pdfCanvas = pdfCanvas;
+    syncSize(p.inkCanvas, pdfCanvas);
+    redrawPage(pageNum);
+  }
+
+  function setupEvents(inkCanvas, pageNum){
+    const activePointers = new Set();
+    let drawing = false, currentStroke = null;
+
+    inkCanvas.addEventListener('pointerdown', e=>{
+      if(!writeMode) return;
+      activePointers.add(e.pointerId);
+      if(activePointers.size > 1){
+        if(currentStroke){ ensureInk(pageNum).strokes.pop(); currentStroke = null; }
+        drawing = false; redrawPage(pageNum); return;
+      }
+      e.preventDefault();
+      drawing = true;
+      inkCanvas.setPointerCapture(e.pointerId);
+      const scale = getViewer().pageScale();
+      if(eraseMode){
+        currentStroke = {points:[{x:e.offsetX/scale, y:e.offsetY/scale}], color:'rgba(0,0,0,1)', width: Math.max(inkWidth * 8, 12), erase:true};
+      } else {
+        currentStroke = {points:[{x:e.offsetX/scale, y:e.offsetY/scale}], color:inkColor, width:inkWidth};
+      }
+      ensureInk(pageNum).strokes.push(currentStroke);
+      redrawPage(pageNum);
+    });
+    inkCanvas.addEventListener('pointermove', e=>{
+      if(!drawing || activePointers.size > 1) return;
+      e.preventDefault();
+      const scale = getViewer().pageScale();
+      currentStroke.points.push({x:e.offsetX/scale, y:e.offsetY/scale});
+      redrawPage(pageNum);
+    });
+    const end = e=>{ activePointers.delete(e.pointerId); drawing = false; currentStroke = null; };
+    inkCanvas.addEventListener('pointerup',     end);
+    inkCanvas.addEventListener('pointercancel', end);
+    inkCanvas.addEventListener('pointerleave',  e=>{ if(drawing) end(e); });
+  }
+
+  function applyCanvasCursor(inkCanvas){
+    if(!writeMode){ inkCanvas.style.cursor = ''; return; }
+    inkCanvas.style.cursor = eraseMode ? 'cell' : 'crosshair';
+  }
+
+  // Toggle annotate mode — applies to all pages, gates pinch-to-zoom
+  annotateBtn.addEventListener('click', function(){
+    writeMode = !writeMode;
+    if(!writeMode && eraseMode){
+      eraseMode = false;
+      if(eraserBtn) eraserBtn.classList.remove('active');
+    }
+    this.classList.toggle('active', writeMode);
+    inkToolsEl.classList.toggle('active', writeMode);
+    pages.forEach(({inkCanvas})=>{
+      inkCanvas.classList.toggle('write-on',  writeMode);
+      inkCanvas.classList.toggle('write-off', !writeMode);
+      applyCanvasCursor(inkCanvas);
+    });
+    getViewer().annotating = writeMode;
+  });
+
+  swatches.forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      inkColor = sw.dataset.color;
+      swatches.forEach(s=>s.classList.toggle('active', s===sw));
+      // Switching to a color exits erase mode
+      if(eraseMode){
+        eraseMode = false;
+        if(eraserBtn) eraserBtn.classList.remove('active');
+        pages.forEach(({inkCanvas})=> applyCanvasCursor(inkCanvas));
+      }
+    });
+  });
+  if(eraserBtn){
+    eraserBtn.addEventListener('click', ()=>{
+      eraseMode = !eraseMode;
+      eraserBtn.classList.toggle('active', eraseMode);
+      pages.forEach(({inkCanvas})=> applyCanvasCursor(inkCanvas));
+    });
+  }
+  widthSelect.addEventListener('change', e=>{ inkWidth = parseFloat(e.target.value); });
+
+  undoBtn.addEventListener('click', ()=>{
+    const num = getViewer().visiblePage;
+    ensureInk(num).strokes.pop();
+    redrawPage(num);
+  });
+  clearBtn.addEventListener('click', ()=>{
+    const num = getViewer().visiblePage;
+    ensureInk(num).strokes = [];
+    redrawPage(num);
+  });
+  saveBtn.addEventListener('click', ()=>{
+    const num = getViewer().visiblePage;
+    const p = pages.get(num);
+    if(!p) return;
+    const tmp = document.createElement('canvas');
+    tmp.width = p.pdfCanvas.width; tmp.height = p.pdfCanvas.height;
+    const tctx = tmp.getContext('2d');
+    tctx.drawImage(p.pdfCanvas, 0, 0);
+    tctx.drawImage(p.inkCanvas, 0, 0);
+    tmp.toBlob(blob=>{
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `annotated-page-${num}.png`;
+      a.click();
+    });
+  });
+
+  function clearAll(){ inkData = {}; pages.forEach((_,num)=> redrawPage(num)); }
+
+  return {
+    onPageReady:  (n, c, w) => attachInkCanvas(n, c, w),
+    onPageResize: (n, c)    => resizePage(n, c),
+    clearAll,
+  };
+}
+
+// =================================================================
+// INSTANTIATE VIEWERS
+// =================================================================
+const viewerL = makePdfViewer({
+  viewportEl:       document.getElementById('viewportL'),
+  pagesContainerEl: document.getElementById('pagesL'),
+  emptyEl:          document.getElementById('emptyL'),
+  prevPageBtn:      document.getElementById('prevPageL'),
+  nextPageBtn:      document.getElementById('nextPageL'),
+  pageIndEl:        document.getElementById('pageIndL'),
+  playlistEl:       document.getElementById('playlistL'),
+  prevPdfBtn:       document.getElementById('prevPdfL'),
+  nextPdfBtn:       document.getElementById('nextPdfL'),
+  selectPdfEl:      document.getElementById('selectPdfL'),
+  zoomInBtn:        document.getElementById('zoomInL'),
+  zoomOutBtn:       document.getElementById('zoomOutL'),
+});
+
+const viewerR = makePdfViewer({
+  viewportEl:       document.getElementById('viewportR'),
+  pagesContainerEl: document.getElementById('pagesR'),
+  emptyEl:          document.getElementById('emptyR'),
+  prevPageBtn:      document.getElementById('prevPageR'),
+  nextPageBtn:      document.getElementById('nextPageR'),
+  pageIndEl:        document.getElementById('pageIndR'),
+  playlistEl:       document.getElementById('playlistR'),
+  prevPdfBtn:       document.getElementById('prevPdfR'),
+  nextPdfBtn:       document.getElementById('nextPdfR'),
+  selectPdfEl:      document.getElementById('selectPdfR'),
+  zoomInBtn:        document.getElementById('zoomInR'),
+  zoomOutBtn:       document.getElementById('zoomOutR'),
+});
+
+// =================================================================
+// INSTANTIATE INK OVERLAYS
+// =================================================================
+const inkL = makeInkOverlay({
+  getViewer:   ()=> viewerL,
+  inkToolsEl:  document.getElementById('inkToolsL'),
+  annotateBtn: document.getElementById('annotateL'),
+  widthSelect: document.getElementById('inkWidthL'),
+  undoBtn:     document.getElementById('inkUndoL'),
+  clearBtn:    document.getElementById('inkClearL'),
+  saveBtn:     document.getElementById('inkSaveL'),
+  swatches:    [...document.querySelectorAll('#inkToolsL .swatch')],
+  eraserBtn:   document.getElementById('inkEraseL'),
+});
+const inkR = makeInkOverlay({
+  getViewer:   ()=> viewerR,
+  inkToolsEl:  document.getElementById('inkToolsR'),
+  annotateBtn: document.getElementById('annotateR'),
+  widthSelect: document.getElementById('inkWidthR'),
+  undoBtn:     document.getElementById('inkUndoR'),
+  clearBtn:    document.getElementById('inkClearR'),
+  saveBtn:     document.getElementById('inkSaveR'),
+  swatches:    [...document.querySelectorAll('#inkToolsR .swatch')],
+  eraserBtn:   document.getElementById('inkEraseR'),
+});
+
+// Wire viewer → ink
+viewerL.onPageReady  = inkL.onPageReady;
+viewerL.onPageResize = inkL.onPageResize;
+viewerR.onPageReady  = inkR.onPageReady;
+viewerR.onPageResize = inkR.onPageResize;
+
+// =================================================================
+// PANE TOGGLES
+// =================================================================
+const workspace   = document.getElementById('workspace');
+const paneDivider = document.getElementById('paneDivider');
+const wbToggleBtn = document.getElementById('wbToggle');
+const tbToggleBtn = document.getElementById('tbToggle');
+
+let tbVisible = true, wbVisible = false;
+
+function applyLayout(animate){
+  let cols;
+  if(tbVisible && wbVisible)  cols = '50% 8px 1fr';
+  else if(tbVisible)           cols = '1fr 0px 0px';
+  else                         cols = '0px 0px 1fr';
+
+  if(!animate){ workspace.style.transition = 'none'; }
+  workspace.style.gridTemplateColumns = cols;
+  if(!animate) requestAnimationFrame(()=> workspace.style.transition = '');
+
+  workspace.classList.toggle('wb-hidden', !wbVisible);
+  workspace.classList.toggle('tb-hidden', !tbVisible);
+  wbToggleBtn.classList.toggle('active', wbVisible);
+  tbToggleBtn.classList.toggle('active', tbVisible);
+  wbToggleBtn.title = wbVisible ? 'Hide workbook'  : 'Show workbook';
+  tbToggleBtn.title = tbVisible ? 'Hide textbook'  : 'Show textbook';
+
+  setTimeout(()=>{ viewerL.refit(); viewerR.refit(); }, 270);
+}
+
+applyLayout(false);
+
+wbToggleBtn.addEventListener('click', ()=>{
+  if(!tbVisible && wbVisible) tbVisible = true;
+  wbVisible = !wbVisible;
+  applyLayout(true);
+});
+tbToggleBtn.addEventListener('click', ()=>{
+  if(tbVisible && !wbVisible) wbVisible = true;
+  tbVisible = !tbVisible;
+  applyLayout(true);
+});
+
+// =================================================================
+// FULLSCREEN TOGGLE
+// =================================================================
+const fsBtn  = document.getElementById('fsBtn');
+const fsIcon = document.getElementById('fsIcon');
+
+const ICON_EXPAND   = `<path d="M1 1h4M1 1v4M14 1h-4M14 1v4M1 14h4M1 14v-4M14 14h-4M14 14v-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`;
+const ICON_COMPRESS = `<path d="M5 1v4H1M10 1v4h4M5 14v-4H1M10 14v-4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`;
+
+function updateFsIcon(){
+  const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  fsIcon.innerHTML = inFs ? ICON_COMPRESS : ICON_EXPAND;
+  fsBtn.title = inFs ? 'Exit fullscreen' : 'Enter fullscreen';
+}
+
+fsBtn.addEventListener('click', ()=>{
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)
+      .call(document.documentElement);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+});
+
+document.addEventListener('fullscreenchange',       updateFsIcon);
+document.addEventListener('webkitfullscreenchange', updateFsIcon);
+
+// =================================================================
+// DRAGGABLE DIVIDER
+// =================================================================
+let dividerDragging = false;
+paneDivider.addEventListener('pointerdown', e=>{
+  if(!tbVisible || !wbVisible) return;
+  dividerDragging = true;
+  paneDivider.classList.add('dragging');
+  paneDivider.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+paneDivider.addEventListener('pointermove', e=>{
+  if(!dividerDragging) return;
+  const rect = workspace.getBoundingClientRect();
+  const minPx = rect.width * 0.2;
+  const maxPx = rect.width - 8 - minPx;
+  const newLeft = Math.min(maxPx, Math.max(minPx, e.clientX - rect.left));
+  workspace.style.gridTemplateColumns = `${((newLeft/rect.width)*100).toFixed(2)}% 8px 1fr`;
+});
+paneDivider.addEventListener('pointerup', ()=>{
+  if(!dividerDragging) return;
+  dividerDragging = false;
+  paneDivider.classList.remove('dragging');
+  viewerL.refit(); viewerR.refit();
+});
+paneDivider.addEventListener('pointercancel', ()=>{ dividerDragging = false; paneDivider.classList.remove('dragging'); });
+
+window.addEventListener('resize', ()=>{ viewerL.refit(); viewerR.refit(); });
+
+// =================================================================
+// FOLDER LOADING & LESSON NAV
+// =================================================================
+const AUDIO_EXTS = /\.(mp3|m4a|aac|ogg|wav|flac|opus|weba)$/i;
+let lessonMap = {}, activeLessonKey = null;
+
+// ---- Auto-load from GitHub ----
+const GITHUB_OWNER = 'jacobcrittenden1';
+const GITHUB_REPO  = 'study-desk';
+const GITHUB_BRANCH = 'main';
+const GITHUB_RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/`;
+
+function ghUrl(relPath){
+  return GITHUB_RAW_BASE + relPath.split('/').map(encodeURIComponent).join('/');
+}
+function remoteFile(relPath){
+  if(!relPath) return null;
+  const url = ghUrl(relPath);
+  const name = relPath.split('/').pop();
+  return {
+    name, url,
+    arrayBuffer: async ()=> (await fetch(url)).arrayBuffer(),
+    text:        async ()=> (await fetch(url)).text(),
+  };
+}
+function remoteFiles(relPaths){ return (relPaths||[]).map(remoteFile); }
+
+async function autoLoadFromGitHub(){
+  if(location.hostname.endsWith('github.io')){
+    const lf = document.getElementById('loadFolderBtn');
+    if(lf) lf.remove();
+  }
+  try{
+    const manifest = await fetch(ghUrl('manifest.json')).then(r=>{ if(!r.ok) throw new Error('manifest fetch failed: '+r.status); return r.json(); });
+    lessonMap = {};
+    Object.keys(manifest.lessons).forEach(key=>{
+      const l = manifest.lessons[key];
+      const g = {
+        textbookPdfs: remoteFiles(l.textbookPdfs),
+        workbookPdfs: remoteFiles(l.workbookPdfs),
+        teachersManualPdf: remoteFile(l.teachersManualPdf),
+        writingPracticePdf: remoteFile(l.writingPracticePdf),
+        writingData: null,
+        audio: remoteFiles(l.audio),
+      };
+      const m = key.match(/lesson[-_\s]?0*(\d+)/i);
+      if(m && manifest.writingData && manifest.writingData[String(parseInt(m[1]))]){
+        const wd = manifest.writingData[String(parseInt(m[1]))];
+        const mp3s = {};
+        Object.keys(wd.mp3s||{}).forEach(idx=>{ mp3s[idx] = remoteFile(wd.mp3s[idx]); });
+        g.writingData = { charsFile: remoteFile(wd.charsFile), mp3s };
+      }
+      lessonMap[key] = g;
+    });
+    const keys = Object.keys(lessonMap).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    if(!keys.length) return false;
+    pdfFileName.textContent = manifest.book || 'Study Desk';
+
+    lessonBar.innerHTML = '<label>Section</label>';
+    const lessonSel = document.createElement('select');
+    lessonSel.className = 'lesson-select';
+    keys.forEach(key=>{
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = folderLabel(key);
+      lessonSel.appendChild(opt);
+    });
+    lessonSel.addEventListener('change', ()=> loadLesson(lessonSel.value));
+    lessonBar.appendChild(lessonSel);
+    lessonBar.classList.remove('hidden');
+    await loadLesson(keys[0]);
+    return true;
+  } catch(err){
+    console.warn('Auto-load from GitHub failed:', err);
+    return false;
+  }
+}
+const lessonBar   = document.getElementById('lessonBar');
+const pdfFileName = document.getElementById('pdfFileName');
+
+// Custom display names — keyed by folder name with the leading number stripped.
+// Any folder not listed here falls back to auto-formatting from the folder name.
+const LESSON_LABELS = {
+  'lesson-01': 'Lesson 01 – Greetings',
+  'lesson-02': 'Lesson 02 – Family',
+  'lesson-03': 'Lesson 03 – Occupations (I)',
+  'lesson-04': 'Lesson 04 – Occupations (II)',
+  'lesson-05': 'Lesson 05 – Getting Acquainted',
+  'lesson-06': 'Lesson 06 – Leisure',
+  'lesson-07': 'Lesson 07 – Formal Phone Etiquette',
+  'lesson-08': 'Lesson 08 – Birthday and Dates',
+  'lesson-09': 'Lesson 09 – Making Social Plans',
+  'lesson-10': 'Lesson 10 – Studying',
+};
+
+function folderLabel(name){
+  const stripped = name.replace(/^\d+-/,'');          // remove leading "02-" etc.
+  if(LESSON_LABELS[stripped]) return LESSON_LABELS[stripped];
+  return stripped.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+}
+function isTeachersManual(filename){ return /teachers[-_]manual/i.test(filename); }
+function isWorkbook(filename){ return /workbook/i.test(filename); }
+function isWritingPractice(filename){ return /^B\d+-\d+/i.test(filename); }
+
+// Teacher's Manual button
+const tmBtn = document.getElementById('tmBtn');
+let _tmUrl  = null;   // revocable object URL for the currently-loaded TM PDF
+let _tmUrlIsRemote = false;
+
+function setTeachersManual(file){
+  if(_tmUrl && !_tmUrlIsRemote){ URL.revokeObjectURL(_tmUrl); }
+  _tmUrl = null; _tmUrlIsRemote = false;
+  if(file){
+    if(file.url){ _tmUrl = file.url; _tmUrlIsRemote = true; }
+    else { _tmUrl = URL.createObjectURL(file); }
+    tmBtn.classList.remove('hidden');
+  } else {
+    tmBtn.classList.add('hidden');
+  }
+}
+
+tmBtn.addEventListener('click', ()=>{ if(_tmUrl) window.open(_tmUrl, '_blank'); });
+
+// Writing Practice button + character panel
+const wpBtn       = document.getElementById('wpBtn');
+const wpModal     = document.getElementById('wpModal');
+const wpCharsPanel = document.getElementById('wpCharsPanel');
+let _wpFile        = null;
+let _wpWritingData = null;  // { charsFile, mp3s:{1:File,2:File,...} }
+let _wpCharAudio   = new Audio();
+let _activeCharBtn = null;
+
+function setWritingPractice(file, writingData){
+  _wpFile = file;
+  _wpWritingData = writingData || null;
+  if(file){ wpBtn.classList.remove('hidden'); }
+  else    { wpBtn.classList.add('hidden'); }
+}
+
+function parseChars(text){
+  // "Page 1: 什 叫 姓 我 好 您\n\nPage 2: 請 人..."
+  const chars = [];
+  text.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line=>{
+    const m = line.match(/^Page\s+(\d+)\s*:\s*(.+)$/i);
+    if(m){ const pg=parseInt(m[1]); m[2].trim().split(/\s+/).filter(Boolean).forEach(ch=>chars.push({ch,pg})); }
+  });
+  return chars;
+}
+
+async function loadWritingChars(data){
+  wpCharsPanel.innerHTML = '';
+  _wpCharAudio.pause();
+  if(_activeCharBtn){ _activeCharBtn.classList.remove('playing'); _activeCharBtn = null; }
+  if(!data || !data.charsFile){ wpCharsPanel.classList.add('hidden'); return; }
+  const text = await data.charsFile.text();
+  const chars = parseChars(text);
+  if(!chars.length){ wpCharsPanel.classList.add('hidden'); return; }
+  let lastPage = null;
+  chars.forEach(({ch, pg}, i) => {
+    if(lastPage !== null && pg !== lastPage){
+      const sep = document.createElement('div'); sep.className = 'char-page-sep'; wpCharsPanel.appendChild(sep);
+    }
+    lastPage = pg;
+    const mp3 = data.mp3s[i + 1];
+    const btn = document.createElement('button');
+    btn.className = 'char-btn' + (mp3 ? '' : ' no-audio');
+    btn.textContent = ch;
+    btn.title = mp3 ? `Play ${ch}` : ch;
+    if(mp3){
+      let url = null;
+      btn.addEventListener('click', ()=>{
+        if(_activeCharBtn && _activeCharBtn !== btn) _activeCharBtn.classList.remove('playing');
+        _activeCharBtn = btn;
+        btn.classList.add('playing');
+        _wpCharAudio.pause();
+        if(!url) url = mp3.url || URL.createObjectURL(mp3);
+        _wpCharAudio.src = url;
+        _wpCharAudio.play();
+        _wpCharAudio.onended = ()=>{ btn.classList.remove('playing'); if(_activeCharBtn===btn) _activeCharBtn=null; };
+      });
+    }
+    wpCharsPanel.appendChild(btn);
+  });
+  wpCharsPanel.classList.remove('hidden');
+}
+
+// Writing Practice modal PDF viewer
+const _wpDummySelect = document.createElement('select');
+const viewerWP = makePdfViewer({
+  viewportEl:       document.getElementById('viewportWP'),
+  pagesContainerEl: document.getElementById('pagesWP'),
+  emptyEl:          document.getElementById('emptyWP'),
+  prevPageBtn:      document.getElementById('prevPageWP'),
+  nextPageBtn:      document.getElementById('nextPageWP'),
+  pageIndEl:        document.getElementById('pageIndWP'),
+  playlistEl:       null,
+  prevPdfBtn:       null,
+  nextPdfBtn:       null,
+  selectPdfEl:      _wpDummySelect,
+  zoomInBtn:        document.getElementById('zoomInWP'),
+  zoomOutBtn:       document.getElementById('zoomOutWP'),
+});
+
+const inkWP = makeInkOverlay({
+  getViewer:   ()=> viewerWP,
+  inkToolsEl:  document.getElementById('inkToolsWP'),
+  annotateBtn: document.getElementById('annotateWP'),
+  widthSelect: document.getElementById('inkWidthWP'),
+  undoBtn:     document.getElementById('inkUndoWP'),
+  clearBtn:    document.getElementById('inkClearWP'),
+  saveBtn:     document.getElementById('inkSaveWP'),
+  swatches:    [...document.querySelectorAll('#inkToolsWP .swatch')],
+  eraserBtn:   document.getElementById('inkEraseWP'),
+});
+
+viewerWP.onPageReady  = inkWP.onPageReady;
+viewerWP.onPageResize = inkWP.onPageResize;
+
+wpBtn.addEventListener('click', async ()=>{
+  if(!_wpFile) return;
+  wpModal.classList.remove('hidden');
+  inkWP.clearAll();
+  await loadWritingChars(_wpWritingData);
+  await viewerWP.setPlaylist([_wpFile]);
+});
+
+document.getElementById('closeWP').addEventListener('click', ()=>{
+  wpModal.classList.add('hidden');
+  _wpCharAudio.pause();
+  if(_activeCharBtn){ _activeCharBtn.classList.remove('playing'); _activeCharBtn = null; }
+});
+
+document.getElementById('pdfInput').addEventListener('change', async (e)=>{
+  const all = Array.from(e.target.files);
+  if(!all.length) return;
+  const depth = f => f.webkitRelativePath.split('/').length;
+  const hasSubfolders = all.some(f => depth(f) >= 3);
+
+  if(hasSubfolders){
+    lessonMap = {};
+    const wpData = {};  // { lessonNum: {charsFile, mp3s:{1:File,...}} }
+    all.forEach(f=>{
+      const parts = f.webkitRelativePath.split('/');
+      if(parts.length < 3) return;
+
+      // Intercept Writing Practice MP3s and .txt files (depth 5+: root/Writing Practice/Writing Practice/Writing MP3s/Lesson NN/file)
+      if(/writing[\s_-]?practice/i.test(parts[1])){
+        if(parts.length >= 5 && /writing[\s_-]?mp3s?/i.test(parts[3])){
+          const m = parts[4] && parts[4].match(/lesson[\s_-]?0*(\d+)/i);
+          if(m){
+            const n = parseInt(m[1]);
+            if(!wpData[n]) wpData[n] = {charsFile:null, mp3s:{}};
+            if(/chars\.txt$/i.test(f.name)){
+              wpData[n].charsFile = f;
+            } else if(AUDIO_EXTS.test(f.name)){
+              const idx = parseInt(f.name);
+              if(!isNaN(idx) && idx > 0) wpData[n].mp3s[idx] = f;
+            }
+          }
+        }
+        return; // skip from lessonMap
+      }
+
+      const key = parts[1];
+      if(!lessonMap[key]) lessonMap[key] = {textbookPdfs:[], workbookPdfs:[], teachersManualPdf:null, writingPracticePdf:null, writingData:null, audio:[]};
+      const lname = f.name.toLowerCase();
+      if(lname.endsWith('.pdf')){
+        if(isTeachersManual(f.name))      lessonMap[key].teachersManualPdf = f;
+        else if(isWorkbook(f.name))       lessonMap[key].workbookPdfs.push(f);
+        else if(isWritingPractice(f.name)) lessonMap[key].writingPracticePdf = f;
+        else                              lessonMap[key].textbookPdfs.push(f);
+      } else if(AUDIO_EXTS.test(f.name)){
+        lessonMap[key].audio.push(f);
+      }
+    });
+    Object.values(lessonMap).forEach(g=>{
+      g.textbookPdfs.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+      g.workbookPdfs.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+      g.audio.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+    });
+    // Attach wpData to matching lesson entries by lesson number
+    Object.keys(lessonMap).forEach(key=>{
+      const m = key.match(/lesson[-_\s]?0*(\d+)/i);
+      if(m){ const n=parseInt(m[1]); if(wpData[n]) lessonMap[key].writingData = wpData[n]; }
+    });
+    const keys = Object.keys(lessonMap).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    pdfFileName.textContent = all[0].webkitRelativePath.split('/')[0];
+
+    lessonBar.innerHTML = '<label>Section</label>';
+    const lessonSel = document.createElement('select');
+    lessonSel.className = 'lesson-select';
+    keys.forEach(key=>{
+      const opt = document.createElement('option');
+      opt.value = key; opt.textContent = folderLabel(key);
+      lessonSel.appendChild(opt);
+    });
+    lessonSel.addEventListener('change', ()=> loadLesson(lessonSel.value));
+    lessonBar.appendChild(lessonSel);
+    lessonBar.classList.remove('hidden');
+    await loadLesson(keys[0]);
+
+  } else {
+    lessonBar.classList.add('hidden');
+    const folderName = all[0].webkitRelativePath.split('/')[0];
+    pdfFileName.textContent = folderLabel(folderName);
+    const isPdf = f => f.name.toLowerCase().endsWith('.pdf');
+    const tmFile = all.find(f=>isPdf(f)&&isTeachersManual(f.name)) || null;
+    const wpFile = all.find(f=>isPdf(f)&&isWritingPractice(f.name)) || null;
+    const tbPdfs = all.filter(f=>isPdf(f)&&!isTeachersManual(f.name)&&!isWorkbook(f.name)&&!isWritingPractice(f.name))
+                      .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+    const wbPdfs = all.filter(f=>isPdf(f)&&!isTeachersManual(f.name)&&isWorkbook(f.name))
+                      .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+    const audio  = all.filter(f=>AUDIO_EXTS.test(f.name))
+                      .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));
+    if(audio.length) setAudioTracks(audio);
+    setTeachersManual(tmFile);
+    setWritingPractice(wpFile);
+    inkL.clearAll(); inkR.clearAll();
+    await viewerL.setPlaylist(tbPdfs);
+    await viewerR.setPlaylist(wbPdfs);
+  }
+});
+
+async function loadLesson(key){
+  activeLessonKey = key;
+  const lessonSel = lessonBar.querySelector('.lesson-select');
+  if(lessonSel) lessonSel.value = key;
+  const g = lessonMap[key] || {textbookPdfs:[],workbookPdfs:[],teachersManualPdf:null,audio:[]};
+  if(g.audio.length){
+    setAudioTracks(g.audio);
+  } else {
+    audioEl.pause(); audioEl.src=''; playPauseBtn.textContent='▶';
+    tracks=[]; activeTrackIndex=-1;
+    trackTabs.innerHTML='';
+    playerEl.hidden=true;
+    audioEmpty.style.display='';
+    audioEmpty.textContent='No audio for this section.';
+  }
+  setTeachersManual(g.teachersManualPdf || null);
+  setWritingPractice(g.writingPracticePdf || null, g.writingData || null);
+  inkL.clearAll(); inkR.clearAll();
+  await viewerL.setPlaylist(g.textbookPdfs);
+  await viewerR.setPlaylist(g.workbookPdfs);
+}
+
+// =================================================================
+// AUDIO PLAYER
+// =================================================================
+const trackTabs    = document.getElementById('trackTabs');
+const audioEmpty   = document.getElementById('audioEmpty');
+const playerEl     = document.getElementById('player');
+const audioEl      = document.getElementById('audioEl');
+const playPauseBtn = document.getElementById('playPause');
+const seek         = document.getElementById('seek');
+const curTime      = document.getElementById('curTime');
+const durTime      = document.getElementById('durTime');
+const speedGroup   = document.getElementById('speedGroup');
+let tracks = [], activeTrackIndex = -1;
+
+const LABEL_RULES = [
+  {kw:'text',    label:'Text · Dialogue', order:0},
+  {kw:'dialog',  label:'Text · Dialogue', order:0},
+  {kw:'vocab',   label:'Vocabulary',      order:1},
+  {kw:'grammar', label:'Grammar',         order:2},
+  {kw:'pinyin',  label:'Pinyin',          order:3},
+  {kw:'tone',    label:'Tones',           order:4},
+  {kw:'recogni', label:'Characters',      order:5},
+];
+function classify(fn){ const l=fn.toLowerCase(); for(const r of LABEL_RULES) if(l.includes(r.kw)) return r; return {label:fn.replace(/\.[^/.]+$/,''),order:99}; }
+
+[0.75,1,1.25,1.5,2].forEach(rate=>{
+  const b=document.createElement('button'); b.textContent=rate+'x'; b.dataset.rate=rate;
+  if(rate===1) b.classList.add('active');
+  b.addEventListener('click',()=>{ audioEl.playbackRate=rate; speedGroup.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b)); });
+  speedGroup.appendChild(b);
+});
+
+function setAudioTracks(files){
+  audioEl.pause(); playPauseBtn.textContent='▶';
+  tracks=files.map(f=>{ const c=classify(f.name); return {url:(f.url||URL.createObjectURL(f)),label:c.label,order:c.order,name:f.name}; })
+    .sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name));
+  trackTabs.innerHTML='';
+  tracks.forEach((t,i)=>{ const b=document.createElement('button'); b.className='tab-btn'; b.textContent=t.label; b.addEventListener('click',()=>selectTrack(i)); trackTabs.appendChild(b); });
+  audioEmpty.style.display='none'; playerEl.hidden=false;
+  activeTrackIndex=-1; playPauseBtn.textContent='▶';
+}
+function selectTrack(i, autoplay=true){
+  activeTrackIndex=i;
+  [...trackTabs.children].forEach((b,idx)=>b.classList.toggle('active',idx===i));
+  audioEl.src=tracks[i].url;
+  audioEl.playbackRate=parseFloat(speedGroup.querySelector('.active')?.dataset.rate||1);
+  if(autoplay){
+    audioEl.play();
+    playPauseBtn.textContent='❚❚';
+  } else {
+    playPauseBtn.textContent='▶';
+  }
+}
+playPauseBtn.addEventListener('click',()=>{ if(activeTrackIndex===-1) return; if(audioEl.paused){audioEl.play();playPauseBtn.textContent='❚❚';}else{audioEl.pause();playPauseBtn.textContent='▶';} });
+audioEl.addEventListener('ended',()=>{ playPauseBtn.textContent='▶'; });
+document.getElementById('back5').addEventListener('click',()=>{ audioEl.currentTime=Math.max(0,audioEl.currentTime-5); });
+document.getElementById('fwd5').addEventListener('click',()=>{ audioEl.currentTime=Math.min(audioEl.duration||0,audioEl.currentTime+5); });
+audioEl.addEventListener('loadedmetadata',()=>{ seek.max=Math.floor(audioEl.duration); durTime.textContent=formatTime(audioEl.duration); });
+audioEl.addEventListener('timeupdate',()=>{ seek.value=Math.floor(audioEl.currentTime); curTime.textContent=formatTime(audioEl.currentTime); });
+seek.addEventListener('input',()=>{ audioEl.currentTime=seek.value; });
+function formatTime(s){ if(!isFinite(s)) return '0:00'; const m=Math.floor(s/60),sec=Math.floor(s%60); return `${m}:${sec.toString().padStart(2,'0')}`; }
+
+autoLoadFromGitHub();
+</script>
+</body>
+</html>
