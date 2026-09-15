@@ -1192,8 +1192,16 @@ syncBtn.addEventListener('click', async ()=>{
   try {
     if(window.progressAuth?.user){
       await window.progressAuth.signOut();
+      location.reload(); // drop back to local-only state cleanly
     } else {
       await window.progressAuth?.signIn();
+      // Reloading (rather than patching state in place) makes sign-in behave
+      // exactly like a fresh page load with progress-store now available: it
+      // re-runs the normal restore path and jumps straight to whatever page
+      // was last saved under this Google account, instead of leaving you on
+      // whatever page you happened to be sitting on pre-sign-in (which could
+      // then get saved over your real progress on the next navigation).
+      location.reload();
     }
   } catch(e){ console.warn('Sign-in failed:', e); }
 });
