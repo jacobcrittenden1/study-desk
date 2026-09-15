@@ -591,9 +591,9 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
     pageItems.forEach(({wrapper}) => ioObserver.observe(wrapper));
   }
 
-  function scrollToPage(num){
+  function scrollToPage(num, instant){
     const item = pageItems.find(p => p.pageNum === num);
-    if(item) item.wrapper.scrollIntoView({behavior:'smooth', block:'start'});
+    if(item) item.wrapper.scrollIntoView({behavior: instant ? 'auto' : 'smooth', block:'start'});
   }
 
   prevPageBtn.addEventListener('click', ()=>{ if(visiblePage > 1) scrollToPage(visiblePage - 1); });
@@ -1247,10 +1247,15 @@ async function autoLoadFromGitHub(){
     if(saved && saved.lesson === startKey){
       const tbIdx = saved.tbIndex || 0;
       if(tbIdx > 0 && tbIdx !== viewerL.playlistIdx) await viewerL.goTo(tbIdx);
-      if(saved.tbPage > 1) viewerL.scrollToPage(saved.tbPage);
       const wbIdx = saved.wbIndex || 0;
       if(wbIdx > 0 && wbIdx !== viewerR.playlistIdx) await viewerR.goTo(wbIdx);
-      if(saved.wbPage > 1) viewerR.scrollToPage(saved.wbPage);
+      // Wait a couple of animation frames so the just-rendered pages have
+      // real layout/height before we scroll to a saved page - calling
+      // scrollIntoView immediately after the pages are inserted can land on
+      // the wrong offset (or no-op) because layout hasn't settled yet.
+      await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+      if(saved.tbPage > 1) viewerL.scrollToPage(saved.tbPage, true);
+      if(saved.wbPage > 1) viewerR.scrollToPage(saved.wbPage, true);
     }
     return true;
   } catch(err){
