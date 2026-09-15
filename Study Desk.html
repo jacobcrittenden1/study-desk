@@ -7,6 +7,37 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBrdyvIaIcSyzFr3qYdmwOVPWFrgDJLDQA",
+    authDomain: "study-desk-3a504.firebaseapp.com",
+    projectId: "study-desk-3a504",
+    storageBucket: "study-desk-3a504.firebasestorage.app",
+    messagingSenderId: "949340232593",
+    appId: "1:949340232593:web:dd8e6998a5cda4f1d69830",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const progressRef = doc(db, "progress", "book1");
+
+  window.progressStore = {
+    async save(data){
+      try { await setDoc(progressRef, { ...data, updatedAt: Date.now() }); }
+      catch(e){ console.warn('Progress save failed:', e); }
+    },
+    async load(){
+      try {
+        const snap = await getDoc(progressRef);
+        return snap.exists() ? snap.data() : null;
+      } catch(e){ console.warn('Progress load failed:', e); return null; }
+    }
+  };
+  window.dispatchEvent(new Event('progress-store-ready'));
+</script>
 <style>
   :root{
     --paper:#efe9dc; --paper-deep:#e6dfcd;
@@ -490,6 +521,8 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
   let visiblePage = 1;
   let _onPageReady  = null;   // fn(pageNum, canvas, wrapper)
   let _onPageResize = null;   // fn(pageNum, canvas)
+  let _onPageChange  = null;  // fn(pageNum) — fires on scroll-driven page change
+  let _onIndexChange = null;  // fn(idx) — fires when the active playlist file changes
   let _annotating   = false;  // pinch disabled while annotating
 
   function pageScale(){ return baseScale * zoomFactor; }
@@ -553,6 +586,7 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
       pageIndEl.textContent = `${best} / ${pdfDoc.numPages}`;
       prevPageBtn.disabled = best <= 1;
       nextPageBtn.disabled = best >= pdfDoc.numPages;
+      _onPageChange?.(best);
     }, { root: viewportEl, threshold: [0, .25, .5, .75, 1] });
     pageItems.forEach(({wrapper}) => ioObserver.observe(wrapper));
   }
@@ -602,6 +636,7 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
     if(prevPdfBtn) prevPdfBtn.disabled = idx === 0;
     if(nextPdfBtn) nextPdfBtn.disabled = idx === playlist.length - 1;
     await loadFile(playlist[idx].file);
+    _onIndexChange?.(idx);
   }
 
   selectPdfEl?.addEventListener('change', ()=> goTo(+selectPdfEl.value));
@@ -736,11 +771,16 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
     get pdfDoc(){ return pdfDoc; },
     get visiblePage(){ return visiblePage; },
     get pageItems(){ return pageItems; },
+    get playlistIdx(){ return playlistIdx; },
     pageScale,
     setPlaylist,
     refit,
+    goTo,
+    scrollToPage,
     set onPageReady(fn){ _onPageReady  = fn; },
     set onPageResize(fn){ _onPageResize = fn; },
+    set onPageChange(fn){ _onPageChange = fn; },
+    set onIndexChange(fn){ _onIndexChange = fn; },
     set annotating(v){ _annotating = !!v; },
   };
 }
@@ -970,6 +1010,11 @@ const viewerR = makePdfViewer({
   zoomOutBtn:       document.getElementById('zoomOutR'),
 });
 
+viewerL.onPageChange  = ()=> scheduleSaveProgress();
+viewerL.onIndexChange = ()=> scheduleSaveProgress();
+viewerR.onPageChange  = ()=> scheduleSaveProgress();
+viewerR.onIndexChange = ()=> scheduleSaveProgress();
+
 // =================================================================
 // INSTANTIATE INK OVERLAYS
 // =================================================================
@@ -1107,6 +1152,30 @@ window.addEventListener('resize', ()=>{ viewerL.refit(); viewerR.refit(); });
 const AUDIO_EXTS = /\.(mp3|m4a|aac|ogg|wav|flac|opus|weba)$/i;
 let lessonMap = {}, activeLessonKey = null;
 
+// ---- Cross-device progress (last page/lesson), stored in Firestore ----
+function waitForProgressStore(){
+  if(window.progressStore) return Promise.resolve(window.progressStore);
+  return new Promise(resolve=>{
+    window.addEventListener('progress-store-ready', ()=>resolve(window.progressStore), {once:true});
+  });
+}
+let _saveProgressTimer = null;
+function scheduleSaveProgress(){
+  clearTimeout(_saveProgressTimer);
+  _saveProgressTimer = setTimeout(saveProgressNow, 800);
+}
+async function saveProgressNow(){
+  if(!activeLessonKey) return;
+  const store = await waitForProgressStore();
+  await store.save({
+    lesson:  activeLessonKey,
+    tbIndex: viewerL.playlistIdx < 0 ? 0 : viewerL.playlistIdx,
+    tbPage:  viewerL.visiblePage,
+    wbIndex: viewerR.playlistIdx < 0 ? 0 : viewerR.playlistIdx,
+    wbPage:  viewerR.visiblePage,
+  });
+}
+
 // ---- Auto-load from GitHub ----
 const GITHUB_OWNER = 'jacobcrittenden1';
 const GITHUB_REPO  = 'study-desk';
@@ -1167,10 +1236,22 @@ async function autoLoadFromGitHub(){
       opt.value = key; opt.textContent = folderLabel(key);
       lessonSel.appendChild(opt);
     });
-    lessonSel.addEventListener('change', ()=> loadLesson(lessonSel.value));
+    lessonSel.addEventListener('change', async ()=>{ await loadLesson(lessonSel.value); scheduleSaveProgress(); });
     lessonBar.appendChild(lessonSel);
     lessonBar.classList.remove('hidden');
-    await loadLesson(keys[0]);
+
+    const saved = await waitForProgressStore().then(store=>store.load());
+    const startKey = (saved && lessonMap[saved.lesson]) ? saved.lesson : keys[0];
+    await loadLesson(startKey);
+
+    if(saved && saved.lesson === startKey){
+      const tbIdx = saved.tbIndex || 0;
+      if(tbIdx > 0 && tbIdx !== viewerL.playlistIdx) await viewerL.goTo(tbIdx);
+      if(saved.tbPage > 1) viewerL.scrollToPage(saved.tbPage);
+      const wbIdx = saved.wbIndex || 0;
+      if(wbIdx > 0 && wbIdx !== viewerR.playlistIdx) await viewerR.goTo(wbIdx);
+      if(saved.wbPage > 1) viewerR.scrollToPage(saved.wbPage);
+    }
     return true;
   } catch(err){
     console.warn('Auto-load from GitHub failed:', err);
