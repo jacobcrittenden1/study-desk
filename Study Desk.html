@@ -515,6 +515,7 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
                          zoomInBtn, zoomOutBtn }) {
 
   let pdfDoc = null, baseScale = 1, zoomFactor = 1, _committedZoom = 1;
+  let _rendering = false; // true while renderAllPages() is actively rendering canvases
   let playlist = [], playlistIdx = -1;
   let pageItems = [];          // [{wrapper, canvas, pageNum}]
   let ioObserver = null;
@@ -535,6 +536,8 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
   }
 
   async function renderAllPages(){
+    _rendering = true;
+    try{
     if(ioObserver){ ioObserver.disconnect(); ioObserver = null; }
     pagesContainerEl.innerHTML = '';
     pageItems = [];
@@ -574,6 +577,9 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
     setupObserver();
     prevPageBtn.disabled = true;
     nextPageBtn.disabled = numPages <= 1;
+    } finally {
+      _rendering = false;
+    }
   }
 
   function setupObserver(){
@@ -750,6 +756,7 @@ function makePdfViewer({ viewportEl, pagesContainerEl, emptyEl,
   }, {passive: false});
 
   async function doZoom(){
+    if(_rendering) return;
     for(const item of pageItems){
       const page = await pdfDoc.getPage(item.pageNum);
       const vp   = page.getViewport({scale: baseScale * zoomFactor});
